@@ -2,8 +2,17 @@ import libtorrent as lt
 import time
 
 ses = lt.session()
-ses.listen_on(6881, 6891)
+params = { 'save_path': './'}
+link = "magnet:?xt=urn:btih:3095CFD5EA94AC38074FF722E6682352AB187AAB&dn=Bleach&tr=http%3a//inferno.demonoid.me%3a3395/announce"
 
-link = "magnet:?xt=urn:btih:04C0FBA9E272E086C47C225A416A06C85FC70810&dn=Bleach%20Season%201-11%20%2b%20movies&tr=http%3a//tracker.thepiratebay.org/announce"
+handle = lt.add_magnet_uri(ses, link, params)
 
+while (not handle.has_metadata()):
+    print "Nope."
+    time.sleep(1)
 
+while (handle.status().state != lt.torrent_status.seeding):
+    s = handle.status()
+
+    print s.progress, s.download_rate, s.upload_rate, s.num_peers, s.state, s.total_download
+    time.sleep(5)
