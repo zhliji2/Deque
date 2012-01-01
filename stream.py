@@ -2,6 +2,6 @@ import gst
 
 apikey="F25C43967D128716"
 
-class Streamer:
+class Streamer(object):
     __init__(self):
         pass
