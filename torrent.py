@@ -25,7 +25,7 @@ class Downloader(object):
             'storage_mode': lt.storage_mode_t(2)
         }
         handle = lt.add_magnet_uri(self.ses, link, params)
-        self.prepare_handle()
+        self.prepare_handle(handle)
         return handle
     
     def add_from_file(self, filename):
