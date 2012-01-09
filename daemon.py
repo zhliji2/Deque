@@ -1,16 +1,9 @@
-import Pyro.core
-import torrent
+from werkzeug.wrappers import Request, Response
 
-class Controller(Pyro.core.ObjBase):
-        def __init__(self):
-                Pyro.core.ObjBase.__init__(self)
-                self.d = torrent.Downloader()
-        
+@Request.application
+def application(request):
+    return Response('Hello World!')
 
-Pyro.core.initServer()
-daemon=Pyro.core.Daemon()
-uri=daemon.connect(Controller(),"controller")
-
-open('uri', 'w').write(str(uri))
-
-daemon.requestLoop()
+if __name__ == '__main__':
+    from werkzeug.serving import run_simple
+    run_simple('localhost', 4000, application)
