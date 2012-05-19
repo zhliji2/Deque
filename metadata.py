@@ -68,7 +68,7 @@ videos = [
 
 #print Metadata().parseMetadata(b)
 
-for v in videos:
-    print '---'
-    m = Metadata().parseMetadata(Metadata().getMetadata(v))
-    Metadata().extractUseful(m)
+#for v in videos:
+#    print '---'
+#    m = Metadata().parseMetadata(Metadata().getMetadata(v))
+#    Metadata().extractUseful(m)
