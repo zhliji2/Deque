@@ -105,13 +105,15 @@ class Downloader(object):
 
     def run_until_complete(self, handle):
         s = handle.status()
-	while (s.state != lt.torrent_status.finished):
-	    print "Loading peers... (%s)" % s.num_peers
-	    if (s.num_peers > 0):
-	        break
-            time.sleep(5)
+        print "Loading peers..."
+        while (s.state != lt.torrent_status.finished):
+            s = handle.status()
+            if (s.num_peers > 0):
+                break
+                time.sleep(5)
 
         while (s.state != lt.torrent_status.finished):
+            s = handle.status()
             fields = (s.progress * 100, s.download_rate / 1000, s.upload_rate / 1000, s.num_peers, s.state)
 
             print '%.2f%% complete (down: %.1f kb/s up: %.1f kB/s peers: %d) %s' % fields
