@@ -1,4 +1,3 @@
-#import stream
 import torrent
 import metadata
 from guessit import guess_episode_info
@@ -16,11 +15,4 @@ for f in d.file_paths(h):
 
 name = "Puella Magi Madoka Magica"
 d.mark_for_download(h, episodes[1])
-d.run_until_complete(d.torrents[0])
-        
-#d.generate_torrent(h)
-#h = d.add_from_ml(links.read())
-#d.generate_resume(h)
-#d.mark_for_download(h, '')
-#d.mark_for_download(h, '')
-#d.run_until_complete(d.torrents[0])
+d.run_until_complete(h)

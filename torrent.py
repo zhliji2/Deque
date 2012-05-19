@@ -8,21 +8,19 @@ class Downloader(object):
     def __init__(self):
         self.ses = lt.session()
 
-        self.ses.add_extension(lt.create_ut_pex_plugin)
-        self.ses.start_dht()
-        self.ses.add_dht_router("router.bittorrent.com", 6881)
-        self.ses.add_dht_router("router.utorrent.com", 6881)
-        pe = lt.pe_settings()
-        pe.out_enc_policy = lt.enc_policy.forced
-        pe.in_enc_policy = lt.enc_policy.forced
-        self.ses.set_pe_settings(pe)
-
-        self.torrents = list()
+        #self.ses.add_extension(lt.create_ut_pex_plugin)
+        #self.ses.start_dht()
+        #self.ses.add_dht_router("router.bittorrent.com", 6881)
+        #self.ses.add_dht_router("router.utorrent.com", 6881)
+        #pe = lt.pe_settings()
+        #pe.out_enc_policy = lt.enc_policy.forced
+        #pe.in_enc_policy = lt.enc_policy.forced
+        #self.ses.set_pe_settings(pe)
 
     def add_from_ml(self, link):
         params = {
             'save_path': 'queue/',
-            'storage_mode': lt.storage_mode_t(2)
+            'storage_mode': lt.storage_mode_t(1)
         }
         handle = lt.add_magnet_uri(self.ses, link, params)
         self.prepare_handle(handle)
@@ -31,7 +29,7 @@ class Downloader(object):
     def add_from_file(self, filename):
         params = {
             'save_path': 'queue/',
-            'storage_mode': lt.storage_mode_t(2),
+            'storage_mode': lt.storage_mode_t(1),
             'ti': lt.torrent_info(filename)
         }
         handle = self.ses.add_torrent(params)
@@ -44,47 +42,6 @@ class Downloader(object):
     def file_names(self, handle):
         return {f.split('/')[-1]: f for f in self.file_paths(handle)}
 
-    def generate_resume(self, handle):
-        handle.pause()
-        m = open('resume/'+handle.name()+'.metadata', "wb")
-        m.write(handle.get_torrent_info().metadata())
-        handle.save_resume_data()
-        self.ses.wait_for_alert(10)
-        alert = self.ses.pop_alert()
-        while (type(alert)!=lt.save_resume_data_alert):
-            self.ses.wait_for_alert(10)
-            alert = self.ses.pop_alert()
-        r = open('resume/'+handle.name()+'.resume', "wb")
-        r.write(lt.bencode(alert.resume_data))
-    
-    def generate_torrent(self, handle):
-        fs = lt.file_storage()
-        lt.add_files(fs, handle.get_torrent_info().orig_files())
-        t = lt.create_torrent(fs)
-        for tracker in handle.get_torrent_info().trackers():
-            t.add_tracker(tracker.url, tracker.tier)
-        t.set_creator("Deque")
-        t.set_comment("")
-        t.set_priv(True)
-        #lt.set_piece_hashes(t, "C:\\", lambda x: sys.stderr.write('.'))
-        f = open('resume/'+handle.name()+'.torrent', "wb")
-        f.write(lt.bencode(t.generate()))
-
-    def load_resume(self):
-        resumes = filter(lambda x: x.find('.resume')!=-1 ,os.listdir('resume'))
-        metadatas = filter(lambda x: x.find('.metadata')!=-1 ,os.listdir('resume'))
-
-        for f in zip(resumes, metadatas):
-            r = {
-            'save_path': 'queue/',
-            'storage_mode': lt.storage_mode_t(1),
-            "resume_data": open('resume/'+f[0],'rb').read(),
-            }
-            h = self.ses.add_torrent(r)
-            h.get_torrent_info().set_metadata(open('resume/'+f[1],'rb').read())
-            self.torrents.append(h)
-            print h.status().state
-    
     def mark_for_download(self, handle, path):
     	paths = self.file_paths(handle)
     	priorities = handle.file_priorities()
@@ -96,12 +53,8 @@ class Downloader(object):
         while (not handle.has_metadata()):
             time.sleep(1)
         print "Done."
-
         handle.prioritize_files([0] * len(handle.file_priorities()) )
-
         handle.pause()
-
-        self.torrents.append(handle)
 
     def run_until_complete(self, handle):
         s = handle.status()
