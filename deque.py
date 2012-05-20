@@ -2,8 +2,6 @@ import torrent
 import metadata
 from guessit import guess_episode_info
 
-links = open('links')
-
 d = torrent.Downloader()
 h = d.add_from_file('resume/((Demonoid.me))-[gg]_Puella_Magi_Madoka_Magica_1_12_[720p].torrent')
 extensions = ["mkv"]

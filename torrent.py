@@ -7,15 +7,14 @@ import os
 class Downloader(object):
     def __init__(self):
         self.ses = lt.session()
-
-        #self.ses.add_extension(lt.create_ut_pex_plugin)
-        #self.ses.start_dht()
-        #self.ses.add_dht_router("router.bittorrent.com", 6881)
-        #self.ses.add_dht_router("router.utorrent.com", 6881)
-        #pe = lt.pe_settings()
-        #pe.out_enc_policy = lt.enc_policy.forced
-        #pe.in_enc_policy = lt.enc_policy.forced
-        #self.ses.set_pe_settings(pe)
+        self.ses.add_extension(lt.create_ut_pex_plugin)
+        self.ses.start_dht()
+        self.ses.add_dht_router("router.bittorrent.com", 6881)
+        self.ses.add_dht_router("router.utorrent.com", 6881)
+        pe = lt.pe_settings()
+        pe.out_enc_policy = lt.enc_policy.forced
+        pe.in_enc_policy = lt.enc_policy.forced
+        self.ses.set_pe_settings(pe)
 
     def add_from_ml(self, link):
         params = {
@@ -44,9 +43,7 @@ class Downloader(object):
 
     def mark_for_download(self, handle, path):
     	paths = self.file_paths(handle)
-    	priorities = handle.file_priorities()
-        priorities[paths.index(path)] = 1
-        handle.prioritize_files(priorities)
+        handle.file_priority(paths.index(path), 1)
 
     def prepare_handle(self, handle):
         print "Downloading metadata..."
