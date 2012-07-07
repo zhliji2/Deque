@@ -20,11 +20,12 @@ class TorrentMetadata(object):
         d.ses.set_alert_mask(16)
         handle.scrape_tracker()
         d.ses.wait_for_alert(20000)
+        files = map(guess_episode_info, d.file_names(handle))
 
         return {
             'seeds': handle.status().num_complete,
             'leeches': handle.status().num_incomplete,
-            'files': handle.get_torrent_info().files()
+            'files': files 
         }
 
 class ShowMetadata(object):

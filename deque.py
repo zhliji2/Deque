@@ -8,5 +8,8 @@ parser.add_argument("action", help="ls")
 parser.add_argument("torrent", help="path to torrent file or magnet uri")
 args = parser.parse_args()
 
-d = torrent.Downloader()
-d.add_from_ml(args.torrent)
+#d = torrent.Downloader()
+#d.add_from_ml(args.torrent)
+
+m = metadata.TorrentMetadata()
+print m.fetch_metadata(args.torrent)

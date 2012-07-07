@@ -34,6 +34,7 @@ class Downloader(object):
         handle = self.ses.add_torrent(params)
         self.prepare_handle(handle)
         return handle
+    
     def save_torrent(self, handle):
         if handle.has_metadata():
             torinfo = handle.get_torrent_info()
