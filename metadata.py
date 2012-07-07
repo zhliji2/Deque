@@ -36,18 +36,18 @@ class ShowMetadata(object):
 
     def search_show(self, show):
         url = 'http://api.trakt.tv/search/shows.json/%s/%s'
-        return fetch_url(url % (key, show))
+        return self.fetch_url(url % (self.key, show.replace(" ", "+")))
 
     def episode_info(self, show, season, episode):
         url = 'http://api.trakt.tv/show/episode/summary.json/%s/%s/%i/%i'
-        return fetch_url(url % (key, show, season, episode))
+        return self.fetch_url(url % (self.key, show.replace(" ", "+"), season, episode))
 
     def seasons_info(self, show):
         url = 'http://api.trakt.tv/show/seasons.json/%s/%s'
-        return fetch_url(url % (key, show))
+        return self.fetch_url(url % (self.key, show.replace(" ", "+")))
 
-    def flat_to_season(self, show, number):
-        seasons = {s['season']:s['episodes'] for s in seasons_info(show)}
+    def flat_to_season(self, show, numer):
+        seasons = {s['season']:s['episodes'] for s in self.seasons_info(show)}
         if 0 in seasons:
             del seasons[0]
         for s in seasons:
