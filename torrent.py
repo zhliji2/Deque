@@ -35,7 +35,38 @@ class Downloader(object):
         self.prepare_handle(handle)
         return handle
     def save_torrent(self, handle):
-        pass
+        if handle.has_metadata():
+            torinfo = handle.get_torrent_info()
+        
+            fs = libtorrent.file_storage()
+            for file in torinfo.files():
+                fs.add_file(file)
+        
+            torfile = libtorrent.create_torrent(fs)
+            torfile.set_comment(torinfo.comment())
+            torfile.set_creator(torinfo.creator())
+        
+            for i in xrange(0, torinfo.num_pieces()):
+                hash = torinfo.hash_for_piece(i)
+                torfile.set_hash(i, hash)
+        
+            for url_seed in torinfo.url_seeds():
+                torfile.add_url_seed(url_seed)
+        
+            for http_seed in torinfo.http_seeds():
+                torfile.add_http_seed(http_seed)
+        
+            for node in torinfo.nodes():
+                torfile.add_node(node)
+        
+            for tracker in torinfo.trackers():
+                torfile.add_tracker(tracker)
+        
+            torfile.set_priv(torinfo.priv())
+        
+            f = open(magnet_torrent, "wb")
+            f.write(libtorrent.bencode(torfile.generate()))
+            f.close()
     
     def file_paths(self, handle):
     	return [f.path for f in handle.get_torrent_info().files()]
