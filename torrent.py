@@ -46,16 +46,13 @@ class Downloader(object):
         handle.file_priority(paths.index(path), 1)
 
     def prepare_handle(self, handle):
-        print "Downloading metadata..."
         while (not handle.has_metadata()):
             time.sleep(1)
-        print "Done."
         handle.prioritize_files([0] * len(handle.file_priorities()) )
         handle.pause()
 
     def run_until_complete(self, handle):
         s = handle.status()
-        print "Loading peers..."
         while (s.state != lt.torrent_status.finished):
             s = handle.status()
             if (s.num_peers > 0):
