@@ -8,6 +8,7 @@ from sys import argv, stderr, exit
 
 import requests
 import json
+from collections import Counter
 
 import torrent
 
@@ -20,7 +21,8 @@ class TorrentMetadata(object):
         d.ses.set_alert_mask(16)
         handle.scrape_tracker()
         d.ses.wait_for_alert(20000)
-        files = map(guess_episode_info, d.file_names(handle))
+        raw_filenames = d.file_names(handle)
+        files = zip(map(guess_episode_info, raw_filenames), raw_filenames)
 
         return {
             'seeds': handle.status().num_complete,
