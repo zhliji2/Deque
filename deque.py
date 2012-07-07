@@ -1,16 +1,12 @@
-import torrent
+#!/usr/bin/python2
 import metadata
-from guessit import guess_episode_info
+import argparse
 
-d = torrent.Downloader()
-h = d.add_from_file('resume/((Demonoid.me))-[gg]_Puella_Magi_Madoka_Magica_1_12_[720p].torrent')
-extensions = ["mkv"]
-episodes = {}
-for f in d.file_paths(h):
-    if f.split('.')[-1] in extensions:
-        episode = guess_episode_info(f.decode('utf8'), info = ['filename'])
-        episodes[episode['episodeNumber']] = f
+parser = argparse.ArgumentParser(description='Print metadata for a torrent')
+parser.add_argument("action", help="ls")
+parser.add_argument("torrent", help="path to torrent file or magnet uri")
+args = parser.parse_args()
 
-name = "Puella Magi Madoka Magica"
-d.mark_for_download(h, episodes[1])
-d.run_until_complete(h)
+m = metadata.TorrentMetadata()
+
+print m.fetch_metadata(args.torrent)

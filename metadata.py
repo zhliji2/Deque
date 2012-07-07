@@ -9,6 +9,24 @@ from sys import argv, stderr, exit
 import requests
 import json
 
+import torrent
+
+from guessit import guess_episode_info
+
+class TorrentMetadata(object):
+    def fetch_metadata(self, filename):
+        d = torrent.Downloader()
+        handle = d.add_from_file(filename)
+        d.ses.set_alert_mask(16)
+        handle.scrape_tracker()
+        d.ses.wait_for_alert(20000)
+
+        return {
+            'seeds': handle.status().num_complete,
+            'leeches': handle.status().num_incomplete,
+            'files': handle.get_torrent_info().files()
+        }
+
 class ShowMetadata(object):
     key = '1fa19d3aecbd7c51be3dd95a122b2ab7'
 
