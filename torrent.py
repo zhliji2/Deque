@@ -34,6 +34,8 @@ class Downloader(object):
         handle = self.ses.add_torrent(params)
         self.prepare_handle(handle)
         return handle
+    def save_torrent(self, handle):
+        pass
     
     def file_paths(self, handle):
     	return [f.path for f in handle.get_torrent_info().files()]
