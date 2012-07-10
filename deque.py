@@ -23,4 +23,11 @@ def episode_name_from_number(blob, number):
     numberings = {f[0]['episodeNumber']: f[1] for f in blob if ('episodeNumber' in f[0])}
     return numberings[number]
 
-print episode_name_from_number(md['files'], 10)
+d = torrent.Downloader()
+handle = d.add_from_file(args.torrent)
+def episode_path_from_name(paths, name):
+    return [p for p in paths if p.endswith(name)][0]
+
+name = episode_name_from_number(md['files'], 10)
+path = episode_path_from_name(d.file_paths(handle), name)
+d.mark_for_download(handle, path)
