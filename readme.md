@@ -1,11 +1,16 @@
-Todo:
+#Readme
 
-Get client server setup.
+Deque is a tool for automating the workflow of using torrents to watch shows.
 
-Check to see if porting to Python 3 is possible.
-Refactor to use proper object orientation (Ask /r/python)
-PEP8
-PyLint
-Proper Package Structure
-Set up Distribute with Dependancies
-Put on the Cheese Shop
+##Todo:
+
+ -  Get client/server setup.
+ -  Get video file metadata working.
+ -  Check to see if porting to Python 3 is possible.
+ -  Create GUI
+ -  Refactor to use proper object orientation (Ask /r/python)
+ -  PEP8
+ -  PyLint
+ -  Proper package atructure
+ -  Set up Distribute with dependancies
+ -  Put on the Cheese Shop
